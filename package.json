@@ -1,0 +1,71 @@
+{
+    "name": "set-slayer",
+    "version": "0.1.0",
+    "description": "A better Set Structure for JavaScript & TypeScript",
+    "keywords": [
+        "set-slayer",
+        "fp",
+        "set",
+        "utility",
+        "javascript",
+        "typescript"
+    ],
+    "homepage": "https://github.com/Sinakhx/set-slayer#readme",
+    "bugs": {
+        "url": "https://github.com/Sinakhx/set-slayer/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Sinakhx/set-slayer.git"
+    },
+    "license": "MIT",
+    "author": "Sina Khodabandehloo <khodabandehloo.sina@gmail.com>",
+    "type": "module",
+    "main": "dist/index.js",
+    "scripts": {
+        "prebuild": "npm run test",
+        "build": "tsup-node lib/index.ts --format esm,cjs,umd --minify --dts",
+        "lint": "eslint .",
+        "lint-staged": "lint-staged",
+        "lint:fix": "eslint --fix .",
+        "prepare": "husky install",
+        "prepublishOnly": "npm run build",
+        "prettier": "prettier --write .",
+        "push": "git push --follow-tags",
+        "release": "standard-version",
+        "release:first": "npm run release -- --first-release && npm run push && npm publish",
+        "release:major": "npm run release -- --release-as major && npm run push && npm publish",
+        "release:minor": "npm run release -- --release-as minor && npm run push && npm publish",
+        "release:notag": "npm run release -- --no-git-tag-version && npm run push && npm publish",
+        "release:patch": "npm run release -- --release-as patch && npm run push && npm publish",
+        "test": "jest",
+        "test:c": "jest --coverage",
+        "test:w": "jest --watch",
+        "typecheck": "tsc --noEmit"
+    },
+    "devDependencies": {
+        "@babel/core": "*",
+        "@babel/preset-env": "*",
+        "@babel/preset-typescript": "*",
+        "@commitlint/cli": "^16.2.3",
+        "@commitlint/config-conventional": "^16.2.1",
+        "@types/jest": "*",
+        "@typescript-eslint/eslint-plugin": "^5.15.0",
+        "@typescript-eslint/parser": "^5.15.0",
+        "babel-jest": "*",
+        "eslint": "^8.11.0",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-config-airbnb-typescript": "^16.1.2",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-import": "^2.25.4",
+        "eslint-plugin-jest": "^26.1.1",
+        "eslint-plugin-prettier": "^4.0.0",
+        "husky": "^7.0.0",
+        "jest": "*",
+        "lint-staged": "^12.3.6",
+        "prettier": "^2.6.0",
+        "standard-version": "^9.3.2",
+        "tsup": "*",
+        "typescript": "*"
+    }
+}

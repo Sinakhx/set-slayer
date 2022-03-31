@@ -1,2 +1,2 @@
 # set-slayer
-js set operations made easy
+A better Set Structure for JavaScript & TypeScript Projects
