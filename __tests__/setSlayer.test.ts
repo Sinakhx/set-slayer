@@ -224,4 +224,97 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(actual.isEqualTo(expected)).toBeTruthy();
         });
     });
+    describe('difference (aka subtract) of a set is a set of all elements that are only in the first set', () => {
+        it('difference of two empty sets is an empty set', () => {
+            const actual = new SmartSet().difference(new SmartSet());
+            const expected = new SmartSet();
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+
+            const subtracted = new SmartSet().subtract(new SmartSet());
+            expect(subtracted.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('difference of empty set and non-empty set is an empty set', () => {
+            const actual = new SmartSet().difference(new SmartSet([3, 2, 5]));
+            const expected = new SmartSet();
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+
+            const subtracted = new SmartSet().subtract(new SmartSet([3, 2, 5]));
+            expect(subtracted.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('difference of a non-empty set and an empty set is the non-empty set', () => {
+            const actual = new SmartSet([1, 2, 3, 4]).difference(new SmartSet());
+            const expected = new SmartSet([1, 2, 3, 4]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+
+            const subtracted = new SmartSet([1, 2, 3, 4]).subtract(new SmartSet());
+            expect(subtracted.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('difference of two non-empty sets is a set of elements that are only in the first set', () => {
+            const actual = new SmartSet([3, 2, 1]).difference(new SmartSet([2, 4]));
+            const expected = new SmartSet([1, 3]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+
+            const subtracted = new SmartSet([3, 2, 1]).subtract(new SmartSet([2, 4]));
+            expect(subtracted.isEqualTo(expected)).toBeTruthy();
+        });
+    });
+    describe('intersection: returns a set of all shared elements', () => {
+        it('intersection of two empty sets is an empty set', () => {
+            const actual = new SmartSet().intersection(new SmartSet());
+            const expected = new SmartSet();
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('intersection of an empty set and non-empty set is an empty set', () => {
+            const actual = new SmartSet().intersection(new SmartSet([3, 2, 5]));
+            const expected = new SmartSet([]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('intersection of a non-empty set and an empty set is an empty set', () => {
+            const actual = new SmartSet([1, 2, 3, 4]).intersection(new SmartSet([]));
+            const expected = new SmartSet([]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('intersection of two sets with no shared elements is an empty set', () => {
+            const actual = new SmartSet([1, 2, 3]).intersection(new SmartSet([4, 5, 6]));
+            const expected = new SmartSet([]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('intersection of two sets with shared elements is a set of the shared elements', () => {
+            const actual = new SmartSet([1, 2, 3, 4]).intersection(new SmartSet([3, 2, 5]));
+            const expected = new SmartSet([2, 3]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+    });
+    describe('union: returns a set of all elements in either set', () => {
+        it('union of empty sets is an empty set', () => {
+            const actual = new SmartSet().union(new SmartSet());
+            const expected = new SmartSet();
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('union of an empty set and non-empty set is the non-empty set', () => {
+            const actual = new SmartSet().union(new SmartSet([2]));
+            const expected = new SmartSet([2]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('union of a non-empty set and empty set is the non-empty set', () => {
+            const actual = new SmartSet([1, 3]).union(new SmartSet());
+            const expected = new SmartSet([1, 3]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('union of non-empty sets contains all unique elements', () => {
+            const actual = new SmartSet([1, 3]).union(new SmartSet([2, 3]));
+            const expected = new SmartSet([1, 2, 3]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+    });
 });
