@@ -1,4 +1,5 @@
 class SmartSet<T> extends Set<T> {
+    // TODO: add JsDoc
     get elements(): T[] {
         return Array.from(this.keys());
     }
@@ -21,13 +22,11 @@ class SmartSet<T> extends Set<T> {
         return this.elements;
     }
 
-    from(...args: Array<T | SmartSet<T>>): SmartSet<T> {
+    static from<T>(...args: Array<T | SmartSet<T> | Set<T>>): SmartSet<T> {
         const res = new SmartSet();
         for (const arg of args) {
-            if (arg instanceof SmartSet) {
-                for (const key of arg.keys()) {
-                    res.add(key);
-                }
+            if (arg instanceof SmartSet || arg instanceof Set) {
+                res.add(Array.from(arg));
             } else {
                 res.add(arg);
             }
@@ -98,10 +97,12 @@ class SmartSet<T> extends Set<T> {
         return this.isSubsetOf(set);
     }
 
-    union(set: SmartSet<T>): SmartSet<T> {
-        return new SmartSet(Array.from(this.elements.concat(set.elements)));
+    union(...sets: SmartSet<T>[]): SmartSet<T> {
+        const arr = sets.reduce((res, set) => res.concat(set.elements), this.elements);
+        return new SmartSet(arr);
     }
 
+    // TODO: add support to more sets
     intersection(set: SmartSet<T>): SmartSet<T> {
         const res = [];
         for (const key of this.keys()) {
@@ -118,6 +119,7 @@ class SmartSet<T> extends Set<T> {
         return new SmartSet(res);
     }
 
+    // TODO: add support to more sets
     symmetricDifference(set: SmartSet<T>): SmartSet<T> {
         const res = [];
         for (const key of this.keys()) {

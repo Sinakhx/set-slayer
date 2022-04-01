@@ -316,5 +316,33 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             const expected = new SmartSet([1, 2, 3]);
             expect(actual.isEqualTo(expected)).toBeTruthy();
         });
+
+        it('union of two sets with no shared elements is a set of all elements', () => {
+            const actual = new SmartSet([1, 3]).union(new SmartSet([2, 4]));
+            const expected = new SmartSet([1, 2, 3, 4]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('union of multiple sets can be supported by a single method call', () => {
+            const setA = new SmartSet([1, 2, 3]);
+            const setB = new SmartSet([3, 4, 5]);
+            const setC = new SmartSet([5, 6, 7]);
+            const actual = setA.union(setB, setC);
+            const expected = new SmartSet([1, 2, 3, 4, 5, 6, 7]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
     });
+    // describe('from: creates a SmartSet based on given arguments', () => {
+    //     it('from an empty array returns an empty set', () => {
+    //         const actual = SmartSet.from();
+    //         const expected = new SmartSet([]);
+    //         expect(actual.isEqualTo(expected)).toBeTruthy();
+    //     });
+
+    //     it('from an array of numbers with duplicates returns a set of the unique numbers', () => {
+    //         const actual = SmartSet.from(1, 2, 3, 3, 2, 1);
+    //         const expected = new SmartSet([1, 2, 3]);
+    //         expect(actual.isEqualTo(expected)).toBeTruthy();
+    //     });
+    // });
 });
