@@ -1,35 +1,35 @@
 {
     "types": [
         {
-            "type": "✨ feat",
+            "type": "feat",
             "section": "Features"
         },
         {
-            "type": "🔧 fix",
+            "type": "fix",
             "section": "Bug Fixes"
         },
         {
-            "type": "📝 docs",
+            "type": "docs",
             "section": "Documentation"
         },
         {
-            "type": "🚸 chore",
+            "type": "chore",
             "hidden": true
         },
         {
-            "type": "🎨 style",
+            "type": "style",
             "hidden": true
         },
         {
-            "type": "🔨 refactor",
+            "type": "refactor",
             "hidden": true
         },
         {
-            "type": "🚀 perf",
+            "type": "perf",
             "hidden": true
         },
         {
-            "type": "🌡 test",
+            "type": "test",
             "hidden": true
         }
     ]
