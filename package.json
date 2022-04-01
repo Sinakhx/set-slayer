@@ -24,7 +24,7 @@
     "main": "dist/index.js",
     "scripts": {
         "prebuild": "npm run test",
-        "build": "tsup-node lib/index.ts --format esm,cjs,umd --minify --dts",
+        "build": "tsup-node lib/index.ts --format esm,cjs --minify --dts",
         "lint": "eslint .",
         "lint-staged": "lint-staged",
         "lint:fix": "eslint --fix .",

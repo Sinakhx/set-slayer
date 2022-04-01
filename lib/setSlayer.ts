@@ -192,6 +192,8 @@ class SmartSet<T> {
 
     powerSet(): SmartSet<SmartSet<T>> {
         const array = this.elements;
+        const result: T[][] = [];
+
         const fork = (i: number, t: T[]) => {
             if (i === array.length) {
                 result.push(t);
@@ -201,15 +203,14 @@ class SmartSet<T> {
             fork(i + 1, t);
         };
 
-        const result: T[][] = [];
         fork(0, []);
         return new SmartSet(result.map((x) => new SmartSet(x)));
     }
 
     subsets = function* subsets(this: SmartSet<T>, array = this.elements, offset = 0): IterableIterator<Array<T>> {
         while (offset < array.length) {
-            let first = array[offset++];
-            for (let subset of subsets.call(this, array, offset)) {
+            const first = array[offset++];
+            for (const subset of subsets.call(this, array, offset)) {
                 subset.push(first);
                 yield subset;
             }
