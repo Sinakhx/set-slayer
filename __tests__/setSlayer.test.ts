@@ -114,4 +114,63 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(actual).toBeFalsy();
         });
     });
+    describe('add: unique elements can be added to a set', () => {
+        it('add to empty set', () => {
+            const actual = new SmartSet().add(3);
+            const expected = new SmartSet([3]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('add to non-empty set', () => {
+            const actual = new SmartSet([1, 2, 4]).add(3);
+            const expected = new SmartSet([1, 2, 3, 4]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('adding an existing element does not change the set', () => {
+            const actual = new SmartSet([1, 2, 3]).add(3);
+            const expected = new SmartSet([1, 2, 3]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+    });
+    describe('delete (aka remove): elements can be removed from a set', () => {
+        it('remove from empty set', () => {
+            const actual = new SmartSet();
+            actual.remove(12);
+            const expected = new SmartSet();
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('remove from non-empty set', () => {
+            const actual = new SmartSet([1, 2, 4]);
+            actual.remove(2);
+            let expected = new SmartSet([1, 4]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+            actual.delete(4);
+            expected = new SmartSet([1]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('removing a non-existing element does not change the set', () => {
+            const actual = new SmartSet([1, 2, 3]);
+            actual.remove(4);
+            const expected = new SmartSet([1, 2, 3]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+    });
+    describe('clear: all elements can be removed from a set with a single method', () => {
+        it('clear an empty set', () => {
+            const actual = new SmartSet();
+            actual.clear();
+            const expected = new SmartSet();
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('clear a non-empty set', () => {
+            const actual = new SmartSet([1, 2, 4]);
+            actual.clear();
+            let expected = new SmartSet([]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+    });
 });
