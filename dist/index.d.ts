@@ -1,22 +1,10 @@
-declare class SmartSet<T> {
-    private set;
-    constructor(initial?: Array<T>);
-    [Symbol.iterator](): IterableIterator<T>;
-    [Symbol.toStringTag]: string;
-    get size(): number;
+declare class SmartSet<T> extends Set<T> {
     get elements(): T[];
-    valueOf(): SmartSet<T>;
-    toString(): string;
-    keys(): IterableIterator<T>;
-    values(): IterableIterator<T>;
-    entries(): IterableIterator<[T, T]>;
     isEmpty(): boolean;
-    contains: (element: T) => boolean;
-    has(element: T): boolean;
-    add(element: T): SmartSet<T>;
-    remove: (element: T) => SmartSet<T>;
-    delete(element: T): SmartSet<T>;
-    clear(): SmartSet<T>;
+    isSingleton(): boolean;
+    contains: (value: T) => boolean;
+    remove: (value: T) => boolean;
+    subtract: (set: SmartSet<T>) => SmartSet<T>;
     from(...args: Array<T | SmartSet<T>>): SmartSet<T>;
     forEach(callback: (value: T, key: T, set: SmartSet<T>) => void, thisArg?: any): void;
     map<U>(callback: (value: T, key: T, set: SmartSet<T>) => U, thisArg?: any): SmartSet<U>;
@@ -30,13 +18,12 @@ declare class SmartSet<T> {
     isEqualTo(set: SmartSet<T>): boolean;
     union(set: SmartSet<T>): SmartSet<T>;
     intersection(set: SmartSet<T>): SmartSet<T>;
-    subtract: (set: SmartSet<T>) => SmartSet<T>;
     difference(set: SmartSet<T>): SmartSet<T>;
     symmetricDifference(set: SmartSet<T>): SmartSet<T>;
     complement(set: SmartSet<T>): SmartSet<T>;
     cartesianProduct(set: SmartSet<T>): SmartSet<[T, T]>;
     powerSet(): SmartSet<SmartSet<T>>;
-    subsets: (this: SmartSet<T>, array?: T[], offset?: number) => IterableIterator<Array<T>>;
+    subsets(): IterableIterator<T[]>;
     subsetsCount(): number;
 }
 

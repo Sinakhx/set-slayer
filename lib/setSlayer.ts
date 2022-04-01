@@ -1,76 +1,27 @@
-class SmartSet<T> {
-    private set: Set<T>;
-
-    constructor(initial: Array<T> = []) {
-        this.set = new Set(initial);
-    }
-
-    [Symbol.iterator](): IterableIterator<T> {
-        return this.set.keys();
-    }
-
-    [Symbol.toStringTag]: string = this.constructor.name;
-
-    get size(): number {
-        return this.set.size;
-    }
-
+class SmartSet<T> extends Set<T> {
     get elements(): T[] {
-        return Array.from(this.set.keys());
-    }
-
-    valueOf(): SmartSet<T> {
-        return this;
-    }
-
-    toString(): string {
-        return `[object ${this.constructor.name}]`;
-    }
-
-    keys(): IterableIterator<T> {
-        return this.set.keys();
-    }
-
-    values(): IterableIterator<T> {
-        return this.set.values();
-    }
-
-    entries(): IterableIterator<[T, T]> {
-        return this.set.entries();
+        return Array.from(this.keys());
     }
 
     isEmpty(): boolean {
-        return this.set.size === 0;
+        return this.size === 0;
+    }
+
+    isSingleton(): boolean {
+        return this.size === 1;
     }
 
     contains = this.has;
 
-    has(element: T): boolean {
-        return this.set.has(element);
-    }
-
-    add(element: T): SmartSet<T> {
-        this.set.add(element);
-        return this;
-    }
-
     remove = this.delete;
 
-    delete(element: T): SmartSet<T> {
-        this.set.delete(element);
-        return this;
-    }
-
-    clear(): SmartSet<T> {
-        this.set.clear();
-        return this;
-    }
+    subtract = this.difference;
 
     from(...args: Array<T | SmartSet<T>>): SmartSet<T> {
         const res = new SmartSet();
         for (const arg of args) {
             if (arg instanceof SmartSet) {
-                for (const key of arg.set.keys()) {
+                for (const key of arg.keys()) {
                     res.add(key);
                 }
             } else {
@@ -81,14 +32,14 @@ class SmartSet<T> {
     }
 
     forEach(callback: (value: T, key: T, set: SmartSet<T>) => void, thisArg?: any): void {
-        for (const key of this.set.keys()) {
+        for (const key of this.keys()) {
             callback.call(thisArg, key, key, this);
         }
     }
 
     map<U>(callback: (value: T, key: T, set: SmartSet<T>) => U, thisArg?: any): SmartSet<U> {
         const res = [];
-        for (const key of this.set.keys()) {
+        for (const key of this.keys()) {
             res.push(callback.call(thisArg, key, key, this));
         }
         return new SmartSet(res);
@@ -96,7 +47,7 @@ class SmartSet<T> {
 
     filter(callback: (value: T, key: T, set: SmartSet<T>) => boolean, thisArg?: any): SmartSet<T> {
         const res = [];
-        for (const key of this.set.keys()) {
+        for (const key of this.keys()) {
             if (callback.call(thisArg, key, key, this)) {
                 res.push(key);
             }
@@ -106,7 +57,7 @@ class SmartSet<T> {
 
     reduce<U>(callback: (previousValue: U, currentValue: T, currentKey: T, set: SmartSet<T>) => U, initialValue: U): U {
         let res = initialValue;
-        for (const key of this.set.keys()) {
+        for (const key of this.keys()) {
             res = callback.call(this, res, key, key, this);
         }
         return res;
@@ -121,7 +72,7 @@ class SmartSet<T> {
     }
 
     isSubsetOf(set: SmartSet<T>): boolean {
-        for (const key of this.set.keys()) {
+        for (const key of this.keys()) {
             if (!set.has(key)) return false;
         }
         return true;
@@ -132,14 +83,14 @@ class SmartSet<T> {
     }
 
     isDisjointOf(set: SmartSet<T>): boolean {
-        for (const key of this.set.keys()) {
+        for (const key of this.keys()) {
             if (set.has(key)) return false;
         }
         return true;
     }
 
     isEqualTo(set: SmartSet<T>): boolean {
-        if (this.set.size !== set.size) return false;
+        if (this.size !== set.size) return false;
         return this.isSubsetOf(set);
     }
 
@@ -149,17 +100,15 @@ class SmartSet<T> {
 
     intersection(set: SmartSet<T>): SmartSet<T> {
         const res = [];
-        for (const key of this.set.keys()) {
+        for (const key of this.keys()) {
             if (set.has(key)) res.push(key);
         }
         return new SmartSet(res);
     }
 
-    subtract = this.difference;
-
     difference(set: SmartSet<T>): SmartSet<T> {
         const res = [];
-        for (const key of this.set.keys()) {
+        for (const key of this.keys()) {
             if (!set.has(key)) res.push(key);
         }
         return new SmartSet(res);
@@ -167,10 +116,10 @@ class SmartSet<T> {
 
     symmetricDifference(set: SmartSet<T>): SmartSet<T> {
         const res = [];
-        for (const key of this.set.keys()) {
+        for (const key of this.keys()) {
             if (!set.has(key)) res.push(key);
         }
-        for (const key of set.set.keys()) {
+        for (const key of set.keys()) {
             if (!this.has(key)) res.push(key);
         }
         return new SmartSet(res);
@@ -182,7 +131,7 @@ class SmartSet<T> {
 
     cartesianProduct(set: SmartSet<T>): SmartSet<[T, T]> {
         const res = [];
-        for (const k1 of this.set.keys()) {
+        for (const k1 of this.keys()) {
             for (const k2 of set.keys()) {
                 res.push([k1, k2]);
             }
@@ -207,19 +156,22 @@ class SmartSet<T> {
         return new SmartSet(result.map((x) => new SmartSet(x)));
     }
 
-    subsets = function* subsets(this: SmartSet<T>, array = this.elements, offset = 0): IterableIterator<Array<T>> {
-        while (offset < array.length) {
-            const first = array[offset++];
-            for (const subset of subsets.call(this, array, offset)) {
-                subset.push(first);
-                yield subset;
+    subsets() {
+        const self = this;
+        return (function* subSets(array, offset): IterableIterator<Array<T>> {
+            while (offset < array.length) {
+                const first = array[offset++];
+                for (const subset of subSets(array, offset)) {
+                    subset.push(first);
+                    yield subset;
+                }
             }
-        }
-        yield [];
-    };
+            yield [];
+        })(self.elements, 0);
+    }
 
     subsetsCount(): number {
-        return 2 ** this.set.size;
+        return 2 ** this.size;
     }
 }
 
