@@ -81,8 +81,18 @@ class SmartSet<T> extends Set<T> {
         return true;
     }
 
+    isProperSubsetOf(set: SmartSet<T>): boolean {
+        if (this.size >= set.size) return false;
+        return this.isSubsetOf(set);
+    }
+
     isSupersetOf(set: SmartSet<T>): boolean {
         return set.isSubsetOf(this);
+    }
+
+    isProperSupersetOf(set: SmartSet<T>): boolean {
+        if (this.size <= set.size) return false;
+        return this.isSupersetOf(set);
     }
 
     isDisjointOf(set: SmartSet<T>): boolean {
