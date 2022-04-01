@@ -102,11 +102,14 @@ class SmartSet<T> extends Set<T> {
         return new SmartSet(arr);
     }
 
-    // TODO: add support to more sets
-    intersection(set: SmartSet<T>): SmartSet<T> {
-        const res = [];
-        for (const key of this.keys()) {
-            if (set.has(key)) res.push(key);
+    intersection(...sets: SmartSet<T>[]): SmartSet<T> {
+        let res = this.elements;
+        for (const set of sets) {
+            const temp = [];
+            for (const key of res) {
+                if (set.has(key)) temp.push(key);
+            }
+            res = temp;
         }
         return new SmartSet(res);
     }

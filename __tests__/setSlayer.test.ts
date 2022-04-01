@@ -291,6 +291,20 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             const expected = new SmartSet([2, 3]);
             expect(actual.isEqualTo(expected)).toBeTruthy();
         });
+
+        it('intersection of multiple sets can be supported by a single method call', () => {
+            const setA = new SmartSet([1, 2, 3]);
+            const setB = new SmartSet([3, 4, 5]);
+            const setC = new SmartSet([5, 6, 7]);
+            const actual1 = setA.intersection(setB, setC);
+            const expected1 = new SmartSet([]);
+            expect(actual1.isEqualTo(expected1)).toBeTruthy();
+
+            const setD = new SmartSet([3, 6, 7]);
+            const actual2 = setA.intersection(setB, setD);
+            const expected2 = new SmartSet([3]);
+            expect(actual2.isEqualTo(expected2)).toBeTruthy();
+        });
     });
     describe('union: returns a set of all elements in either set', () => {
         it('union of empty sets is an empty set', () => {
