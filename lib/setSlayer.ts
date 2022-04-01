@@ -17,6 +17,10 @@ class SmartSet<T> extends Set<T> {
 
     subtract = this.difference;
 
+    toArray(): T[] {
+        return this.elements;
+    }
+
     from(...args: Array<T | SmartSet<T>>): SmartSet<T> {
         const res = new SmartSet();
         for (const arg of args) {

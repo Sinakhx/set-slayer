@@ -1,6 +1,41 @@
 import SmartSet from '../lib/setSlayer';
 
 describe("A suite for the Set-Slayer's SmartSet API", () => {
+    describe('size: the number of elements in a set can be obtained with a single getter', () => {
+        it('size of empty set', () => {
+            const actual = new SmartSet().size;
+            const expected = 0;
+            expect(actual).toBe(expected);
+        });
+
+        it('size of non-empty set', () => {
+            const actual = new SmartSet([1, 2, 3]).size;
+            const expected = 3;
+            expect(actual).toBe(expected);
+        });
+    });
+    describe('elements & toArray: the set elements can be returned as an array', () => {
+        it('elements of empty set', () => {
+            const set = new SmartSet();
+            const expected: any[] = [];
+            expect(set.elements).toEqual(expected);
+            expect(set.toArray()).toEqual(expected);
+        });
+
+        it('elements of non-empty set', () => {
+            const set = new SmartSet([1, 2, 3]);
+            const expected = [1, 2, 3];
+            expect(set.elements).toEqual(expected);
+            expect(set.toArray()).toEqual(expected);
+        });
+
+        it('elements of set with duplicate elements', () => {
+            const set = new SmartSet([1, 2, 2, 3, 3]);
+            const expected = [1, 2, 3];
+            expect(set.elements).toEqual(expected);
+            expect(set.toArray()).toEqual(expected);
+        });
+    });
     describe('isEmpty: returns true if the set contains no elements', () => {
         it('should be empty if there are no elements', () => {
             const actual = new SmartSet().isEmpty();
@@ -10,6 +45,22 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
         it('should not be empty if there are some elements', () => {
             const actual = new SmartSet([1]).isEmpty();
             expect(actual).toBeFalsy();
+        });
+    });
+    describe('isSingleton: returns true if the set contains only one element', () => {
+        it('should return false if there are no elements', () => {
+            const actual = new SmartSet().isSingleton();
+            expect(actual).toBe(false);
+        });
+
+        it('should return true if there is only one element', () => {
+            const actual = new SmartSet([1]).isSingleton();
+            expect(actual).toBe(true);
+        });
+
+        it('should return flase if there are more than one elements', () => {
+            const actual = new SmartSet([1, 2, 3]).isSingleton();
+            expect(actual).toBe(false);
         });
     });
     describe('contains (aka has): sets can report if they contain an element', () => {
