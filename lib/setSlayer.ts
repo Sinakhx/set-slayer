@@ -1,7 +1,57 @@
 class SmartSet<T> extends Set<T> {
-    // TODO: add JsDoc
+    /**
+     * if set to true, automatically adds new elements to the globalSet on every set creation
+     */
+    static autoGlobals: boolean = false;
+
+    private static _globalSet: SmartSet<any> | Set<any> | undefined;
+
+    /**
+     * @returns global set as the reference set
+     */
+    get globalSet(): SmartSet<T> {
+        return new SmartSet(SmartSet._globalSet ? Array.from(SmartSet._globalSet) : []);
+    }
+
+    /**
+     * @returns global set as the reference set
+     */
+    set globalSet(set: SmartSet<T>) {
+        SmartSet._globalSet = new Set(set.elements);
+    }
+
+    constructor(...elements: any[]) {
+        super(...elements);
+        if (!SmartSet.autoGlobals) {
+            return;
+        }
+        if (!SmartSet._globalSet) {
+            SmartSet._globalSet = new Set(this.elements);
+        } else {
+            for (const element of elements) {
+                SmartSet._globalSet.add(element);
+            }
+        }
+    }
+
+    static from<T>(...args: Array<T | SmartSet<T> | Set<T>>): SmartSet<T> {
+        const res = new SmartSet();
+        for (const arg of args) {
+            if (arg instanceof SmartSet || arg instanceof Set) {
+                res.add(Array.from(arg));
+            } else {
+                res.add(arg);
+            }
+        }
+        return res as SmartSet<T>;
+    }
+
     get elements(): T[] {
         return Array.from(this.keys());
+    }
+
+    toArray(): T[] {
+        return this.elements;
     }
 
     isEmpty(): boolean {
@@ -18,50 +68,35 @@ class SmartSet<T> extends Set<T> {
 
     subtract = this.difference;
 
-    toArray(): T[] {
-        return this.elements;
-    }
-
-    static from<T>(...args: Array<T | SmartSet<T> | Set<T>>): SmartSet<T> {
-        const res = new SmartSet();
-        for (const arg of args) {
-            if (arg instanceof SmartSet || arg instanceof Set) {
-                res.add(Array.from(arg));
-            } else {
-                res.add(arg);
-            }
-        }
-        return res as SmartSet<T>;
-    }
-
-    forEach(callback: (value: T, key: T, set: SmartSet<T>) => void, thisArg?: any): void {
+    forEach(callbackfn: (value: T, key: T, set: SmartSet<T>) => void, thisArg?: any): void {
         for (const key of this.keys()) {
-            callback.call(thisArg, key, key, this);
+            callbackfn.call(thisArg, key, key, this);
         }
     }
 
-    map<U>(callback: (value: T, key: T, set: SmartSet<T>) => U, thisArg?: any): SmartSet<U> {
+    map<U>(callbackfn: (value: T, key: T, set: SmartSet<T>) => U, thisArg?: any): SmartSet<U> {
         const res = [];
         for (const key of this.keys()) {
-            res.push(callback.call(thisArg, key, key, this));
+            res.push(callbackfn.call(thisArg, key, key, this));
         }
         return new SmartSet(res);
     }
 
-    filter(callback: (value: T, key: T, set: SmartSet<T>) => boolean, thisArg?: any): SmartSet<T> {
+    filter(callbackfn: (value: T, key: T, set: SmartSet<T>) => boolean, thisArg?: any): SmartSet<T> {
         const res = [];
         for (const key of this.keys()) {
-            if (callback.call(thisArg, key, key, this)) {
+            if (callbackfn.call(thisArg, key, key, this)) {
                 res.push(key);
+                res.filter;
             }
         }
         return new SmartSet(res);
     }
 
-    reduce<U>(callback: (previousValue: U, currentValue: T, currentKey: T, set: SmartSet<T>) => U, initialValue: U): U {
+    reduce<U>(callbackfn: (previousValue: U, currentValue: T, currentKey: T, set: SmartSet<T>) => U, initialValue: U): U {
         let res = initialValue;
         for (const key of this.keys()) {
-            res = callback.call(this, res, key, key, this);
+            res = callbackfn.call(this, res, key, key, this);
         }
         return res;
     }
