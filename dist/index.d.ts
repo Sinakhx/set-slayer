@@ -176,7 +176,7 @@ declare class SmartSet<T> extends Set<T> {
      * @param set the set to compare with
      * @returns all elements in the argument set except those in this set
      */
-    relativeComplement(set: SmartSet<T>): SmartSet<T>;
+    relativeComplement: (set: SmartSet<T>) => SmartSet<T>;
     /**
      * creates Cartesian Product between two sets (A x B)
      * @param set the second set as the product multiplier

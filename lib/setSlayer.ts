@@ -353,9 +353,7 @@ class SmartSet<T> extends Set<T> {
      * @param set the set to compare with
      * @returns all elements in the argument set except those in this set
      */
-    relativeComplement(set: SmartSet<T>): SmartSet<T> {
-        return set.difference(this);
-    }
+    relativeComplement = this.difference;
 
     /**
      * creates Cartesian Product between two sets (A x B)
