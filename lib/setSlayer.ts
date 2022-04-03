@@ -36,15 +36,21 @@ class SmartSet<T> extends Set<T> {
     }
 
     /**
-     * creates a new set from the given arguments
+     * creates a new set from the given arguments (flattens Sets & Arrays one level deep)
      * @param args set elements
      * @returns a new set with the given elements
      */
-    static from<T>(...args: Array<T | SmartSet<T> | Set<T>>): SmartSet<T> {
+    static from<T extends any>(...args: Array<T | T[] | SmartSet<T> | Set<T>>): SmartSet<T> {
         const res = new SmartSet();
         for (const arg of args) {
-            if (arg instanceof SmartSet || arg instanceof Set) {
-                res.add(Array.from(arg));
+            if (Array.isArray(arg)) {
+                for (const element of arg) {
+                    res.add(element);
+                }
+            } else if (arg instanceof SmartSet || arg instanceof Set) {
+                for (const element of arg.keys()) {
+                    res.add(element);
+                }
             } else {
                 res.add(arg);
             }

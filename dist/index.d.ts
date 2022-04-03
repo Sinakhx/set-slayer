@@ -14,11 +14,11 @@ declare class SmartSet<T> extends Set<T> {
     set globalSet(set: SmartSet<T>);
     constructor(...elements: any[]);
     /**
-     * creates a new set from the given arguments
+     * creates a new set from the given arguments (flattens Sets & Arrays one level deep)
      * @param args set elements
      * @returns a new set with the given elements
      */
-    static from<T>(...args: Array<T | SmartSet<T> | Set<T>>): SmartSet<T>;
+    static from<T extends any>(...args: Array<T | T[] | SmartSet<T> | Set<T>>): SmartSet<T>;
     /**
      * @returns array representation of the set
      */

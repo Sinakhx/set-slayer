@@ -346,17 +346,36 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(actual.isEqualTo(expected)).toBeTruthy();
         });
     });
-    // describe('from: creates a SmartSet based on given arguments', () => {
-    //     it('from an empty array returns an empty set', () => {
-    //         const actual = SmartSet.from();
-    //         const expected = new SmartSet([]);
-    //         expect(actual.isEqualTo(expected)).toBeTruthy();
-    //     });
+    describe('from: creates a SmartSet based on given arguments', () => {
+        it('from an empty array returns an empty set', () => {
+            const actual = SmartSet.from();
+            const expected = new SmartSet([]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
 
-    //     it('from an array of numbers with duplicates returns a set of the unique numbers', () => {
-    //         const actual = SmartSet.from(1, 2, 3, 3, 2, 1);
-    //         const expected = new SmartSet([1, 2, 3]);
-    //         expect(actual.isEqualTo(expected)).toBeTruthy();
-    //     });
-    // });
+        it('from an array of numbers with duplicates returns a set of the unique numbers', () => {
+            const actual = SmartSet.from(1, 2, 3, 3, 2, 1);
+            const expected: SmartSet<number> = new SmartSet([1, 2, 3]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('flattens Array arguments', () => {
+            const actual = SmartSet.from([1, 2, 3], [4, 5, 6]);
+            const expected: SmartSet<number> = new SmartSet([1, 2, 3, 4, 5, 6]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('flattens Set & SmartSet arguments', () => {
+            const actual = SmartSet.from(new Set([1, 2, 3]), new SmartSet([4, 5, 6]));
+            const expected: SmartSet<number> = new SmartSet([1, 2, 3, 4, 5, 6]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+
+        it('flattens Set, SmartSet, Array arguments & handles Numbers as members', () => {
+            const actual = SmartSet.from(new Set([1, 2, 3]), new SmartSet([4, 5, 6]), [7, 8, 9], 10, 11);
+            const expected: SmartSet<number> = new SmartSet([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+            expect(actual.elements).toEqual(expected.elements);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+    });
 });
