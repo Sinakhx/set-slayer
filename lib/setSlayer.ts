@@ -26,6 +26,7 @@ class SmartSet<T> extends Set<T> {
             return;
         }
         if (!SmartSet._globalSet) {
+            // using native Set api to avoid infinite callbacks on constructor
             SmartSet._globalSet = new Set(this.elements);
         } else {
             for (const element of elements) {
@@ -34,6 +35,11 @@ class SmartSet<T> extends Set<T> {
         }
     }
 
+    /**
+     * creates a new set from the given arguments
+     * @param args set elements
+     * @returns a new set with the given elements
+     */
     static from<T>(...args: Array<T | SmartSet<T> | Set<T>>): SmartSet<T> {
         const res = new SmartSet();
         for (const arg of args) {
@@ -46,34 +52,69 @@ class SmartSet<T> extends Set<T> {
         return res as SmartSet<T>;
     }
 
+    /**
+     * @returns array representation of the set
+     */
     get elements(): T[] {
         return Array.from(this.keys());
     }
 
+    /**
+     * @returns array representation of the set
+     */
     toArray(): T[] {
         return this.elements;
     }
 
+    /**
+     * @returns true if the set is empty
+     */
     isEmpty(): boolean {
         return this.size === 0;
     }
 
+    /**
+     * @returns true if the set has only one element
+     */
     isSingleton(): boolean {
         return this.size === 1;
     }
 
+    /**
+     * alias of `has`
+     * @returns true if the set contains an element
+     */
     contains = this.has;
 
+    /**
+     * alias of `delete`
+     * - deletes an element from the set
+     * @returns true if the element removal is successful
+     */
     remove = this.delete;
 
+    /**
+     * alias of `difference`
+     * @returns all elements in the set except those in the argument set
+     */
     subtract = this.difference;
 
+    /**
+     * Performs the specified action for each element in the set.
+     * @param callbackfn — A function that accepts up to three arguments. forEach calls the callbackfn function one time for each element in the set.
+     * @param thisArg — An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value.
+     */
     forEach(callbackfn: (value: T, key: T, set: SmartSet<T>) => void, thisArg?: any): void {
         for (const key of this.keys()) {
             callbackfn.call(thisArg, key, key, this);
         }
     }
 
+    /**
+     * Calls a defined callback function on each element of the set, and returns a new set that contains the results.
+     * @param callbackfn — A function that accepts up to three arguments. The map method calls the callbackfn function one time for each element in the set.
+     * @param thisArg — An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value.
+     */
     map<U>(callbackfn: (value: T, key: T, set: SmartSet<T>) => U, thisArg?: any): SmartSet<U> {
         const res = [];
         for (const key of this.keys()) {
@@ -82,17 +123,26 @@ class SmartSet<T> extends Set<T> {
         return new SmartSet(res);
     }
 
+    /**
+     * Returns the elements of the set that meet the condition specified in a callback function.
+     * @param callbackfn — A function that accepts up to three arguments. The filter method calls the callbackfn function one time for each element in the set.
+     * @param thisArg — An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value.
+     */
     filter(callbackfn: (value: T, key: T, set: SmartSet<T>) => boolean, thisArg?: any): SmartSet<T> {
         const res = [];
         for (const key of this.keys()) {
             if (callbackfn.call(thisArg, key, key, this)) {
                 res.push(key);
-                res.filter;
             }
         }
         return new SmartSet(res);
     }
 
+    /**
+     * Calls the specified callback function for all the elements in the set. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
+     * @param callbackfn — A function that accepts up to four arguments. The reduce method calls the callbackfn function one time for each element in the set.
+     * @param initialValue — If initialValue is specified, it is used as the initial value to start the accumulation. The first call to the callbackfn function provides this value as an argument instead of a set value.
+     */
     reduce<U>(callbackfn: (previousValue: U, currentValue: T, currentKey: T, set: SmartSet<T>) => U, initialValue: U): U {
         let res = initialValue;
         for (const key of this.keys()) {
@@ -101,14 +151,26 @@ class SmartSet<T> extends Set<T> {
         return res;
     }
 
+    /**
+     * checks if the given argument is a set
+     * @param set value to be checked
+     */
     isSet(set: unknown): boolean {
         return set instanceof SmartSet || set instanceof Set;
     }
 
+    /**
+     * @returns a copy of the current set
+     */
     clone(): SmartSet<T> {
         return new SmartSet(this.elements);
     }
 
+    /**
+     * checks if this set is a subset of the argument set (all elements in this set being present in the other set) (A ⊆ B)
+     * @param set parent set to be referenced
+     * @returns true if the set is a subset of the argument set
+     */
     isSubsetOf(set: SmartSet<T>): boolean {
         for (const key of this.keys()) {
             if (!set.has(key)) return false;
@@ -116,20 +178,40 @@ class SmartSet<T> extends Set<T> {
         return true;
     }
 
+    /**
+     * checks if this set is a proper subset of the argument set (all elements in this set being present in the other set but the sets should not be equal) (A ⊂ B)
+     * @param set parent set to be referenced
+     * @returns true if the set is a proper subset of the argument set
+     */
     isProperSubsetOf(set: SmartSet<T>): boolean {
         if (this.size >= set.size) return false;
         return this.isSubsetOf(set);
     }
 
+    /**
+     * checks if this set is a superset of the argument set (all elements in the argument set being present in this set) (A ⊇ B)
+     * @param set child set to be referenced
+     * @returns true if the set is a superset of the argument set
+     */
     isSupersetOf(set: SmartSet<T>): boolean {
         return set.isSubsetOf(this);
     }
 
+    /**
+     * checks if this set is a proper superset of the argument set (all elements in the argument set being present in this set but the sets should not be equal) (A ⊃ B)
+     * @param set child set to be referenced
+     * @returns true if the set is a proper superset of the argument set
+     */
     isProperSupersetOf(set: SmartSet<T>): boolean {
         if (this.size <= set.size) return false;
         return this.isSupersetOf(set);
     }
 
+    /**
+     * checks if this set has no common elements with the argument set (A ∩ B = ∅)
+     * @param set set to be checked against
+     * @returns true if the two sets have no common elements
+     */
     isDisjointOf(set: SmartSet<T>): boolean {
         for (const key of this.keys()) {
             if (set.has(key)) return false;
@@ -137,16 +219,31 @@ class SmartSet<T> extends Set<T> {
         return true;
     }
 
+    /**
+     * checks if two sets are equal (A = B)
+     * @param set to be compared against
+     * @returns true if the two sets have the same size & the same elements
+     */
     isEqualTo(set: SmartSet<T>): boolean {
         if (this.size !== set.size) return false;
         return this.isSubsetOf(set);
     }
 
+    /**
+     * creates a set of the union of this set and the argument sets (A ∪ B ∪ ...)
+     * @param sets sets to be joined
+     * @returns a new set containing all the elements of the argument sets
+     */
     union(...sets: SmartSet<T>[]): SmartSet<T> {
         const arr = sets.reduce((res, set) => res.concat(set.elements), this.elements);
         return new SmartSet(arr);
     }
 
+    /**
+     * creates a set of all common elements between this set and the argument sets (A ∩ B ∩ ...)
+     * @param sets sets to be intersected
+     * @returns a new set containing all the common elements of the argument sets
+     */
     intersection(...sets: SmartSet<T>[]): SmartSet<T> {
         let res = this.elements;
         for (const set of sets) {
@@ -159,6 +256,11 @@ class SmartSet<T> extends Set<T> {
         return new SmartSet(res);
     }
 
+    /**
+     * creates a set of elements that are in this set but not in the argument set (A - B) or (A \ B)
+     * @param set set to be differenced from
+     * @returns a new set containing all the elements of this set that are not present in the argument set
+     */
     difference(set: SmartSet<T>): SmartSet<T> {
         const res = [];
         for (const key of this.keys()) {
@@ -167,22 +269,45 @@ class SmartSet<T> extends Set<T> {
         return new SmartSet(res);
     }
 
-    // TODO: add support to more sets
-    symmetricDifference(set: SmartSet<T>): SmartSet<T> {
-        const res = [];
-        for (const key of this.keys()) {
-            if (!set.has(key)) res.push(key);
-        }
-        for (const key of set.keys()) {
-            if (!this.has(key)) res.push(key);
-        }
-        return new SmartSet(res);
+    /**
+     * creates the symmetric difference of this set and the argument sets (A ∆ B ∆ ...)
+     * @param sets sets to be differenced from
+     * @returns the set of elements which are in either of the sets, but not in their intersection
+     */
+    symmetricDifference(...sets: SmartSet<T>[]): SmartSet<T> {
+        const allSets = sets.concat(this);
+        const symDiff2sets = (set1: SmartSet<T>, set2: SmartSet<T>): SmartSet<T> => {
+            const res = [];
+            for (const key of set1.keys()) {
+                if (!set2.has(key)) res.push(key);
+            }
+            for (const key of set2.keys()) {
+                if (!set1.has(key)) res.push(key);
+            }
+            return new SmartSet(res);
+        };
+        return allSets.reduce((res, set) => symDiff2sets(res, set), this);
     }
 
-    complement(set: SmartSet<T>): SmartSet<T> {
+    /**
+     * returns the complement set of this set
+     * @param global set to be considered as the global set
+     * - if `autoGlobals` property is set to `true`, the default value is the union of all instantiated sets
+     * @returns the complement of the current set based on the given global set
+     */
+    complement(global?: SmartSet<T>): SmartSet<T> {
+        let set: SmartSet<T> = this;
+        if (!global && SmartSet.autoGlobals) {
+            set = this.globalSet;
+        }
         return set.difference(this);
     }
 
+    /**
+     * creates Cartesian Product between two sets (A x B)
+     * @param set the second set as the product multiplier
+     * @returns a new set which contains pair results from the Cartesian Product of this set with the argument set
+     */
     cartesianProduct(set: SmartSet<T>): SmartSet<[T, T]> {
         const res = [];
         for (const k1 of this.keys()) {
@@ -193,6 +318,9 @@ class SmartSet<T> extends Set<T> {
         return new SmartSet(res) as unknown as SmartSet<[T, T]>;
     }
 
+    /**
+     * @returns a set of all possible subsets of the current set (note: this might ruin your app's performance on large sets)
+     */
     powerSet(): SmartSet<SmartSet<T>> {
         const array = this.elements;
         const result: T[][] = [];
@@ -210,6 +338,9 @@ class SmartSet<T> extends Set<T> {
         return new SmartSet(result.map((x) => new SmartSet(x)));
     }
 
+    /**
+     * @returns an iterator which yields a subset of the current set on each next call (untill all subsets are provided)
+     */
     subsets() {
         const self = this;
         return (function* subSets(array, offset): IterableIterator<Array<T>> {
@@ -224,6 +355,9 @@ class SmartSet<T> extends Set<T> {
         })(self.elements, 0);
     }
 
+    /**
+     * @returns the number of possible subsets of this set
+     */
     subsetsCount(): number {
         return 2 ** this.size;
     }

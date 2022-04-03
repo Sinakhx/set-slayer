@@ -16,6 +16,7 @@
         "react/jsx-filename-extension": "off",
         "import/prefer-default-export": "off",
         "class-methods-use-this": "off",
+        "no-underscore-dangle": "off",
         "no-restricted-syntax": "off",
         "no-param-reassign": "off",
         "prefer-template": "off",
