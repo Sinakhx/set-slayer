@@ -73,6 +73,20 @@ class SmartSet<T> extends Set<T> {
     }
 
     /**
+     * adds a new element to the set
+     * - if the `autoGlobals` property is set to true, automatically adds the element to the global set as well
+     * @param value element to be added to the set
+     * @returns the set itself
+     */
+    override add(value: T): this {
+        if (SmartSet.autoGlobals && SmartSet._globalSet) {
+            SmartSet._globalSet.add(value);
+        }
+        super.add(value);
+        return this;
+    }
+
+    /**
      * @returns array representation of the set
      */
     toArray(): T[] {

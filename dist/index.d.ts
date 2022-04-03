@@ -28,6 +28,13 @@ declare class SmartSet<T> extends Set<T> {
      */
     get cardinality(): number;
     /**
+     * adds a new element to the set
+     * - if the `autoGlobals` property is set to true, automatically adds the element to the global set as well
+     * @param value element to be added to the set
+     * @returns the set itself
+     */
+    add(value: T): this;
+    /**
      * @returns array representation of the set
      */
     toArray(): T[];
