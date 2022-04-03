@@ -72,6 +72,12 @@ declare class SmartSet<T> extends Set<T> {
      */
     random(): T;
     /**
+     * stringifies the set
+     * @param delimiter arbitrary seperator between set elements (default: ', ')
+     * @returns string representation of the set
+     */
+    stringify(delimiter?: string): string;
+    /**
      * Performs the specified action for each element in the set.
      * @param callbackfn — A function that accepts up to three arguments. forEach calls the callbackfn function one time for each element in the set.
      * @param thisArg — An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value.
