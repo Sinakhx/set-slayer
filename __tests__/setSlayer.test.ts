@@ -1,6 +1,36 @@
 import SmartSet from '../lib/setSlayer';
 
 describe("A suite for the Set-Slayer's SmartSet API", () => {
+    describe('native set funtionalities', () => {
+        it('should support unoverridden native methods', () => {
+            const set = new SmartSet([1, 2, 3]);
+            const keys = [...set.keys()];
+            expect(keys).toEqual([1, 2, 3]);
+
+            const entries = [...set.entries()];
+            expect(entries).toEqual([
+                [1, 1],
+                [2, 2],
+                [3, 3],
+            ]);
+
+            expect(typeof set['hasOwnProperty']).toBe('function');
+
+            const setFromString = new SmartSet('Free fire');
+            const smartSetFromString = new SmartSet('Free fire');
+            expect(Array.from(setFromString.keys()).sort()).toEqual(['F', 'r', 'e', ' ', 'f', 'i'].sort());
+            expect([...setFromString.keys()]).toEqual([...smartSetFromString.keys()]);
+        });
+
+        it('should behave as the native set except for the "add" method', () => {
+            const set = new Set([1, 2, 3]);
+            const smartSet = new SmartSet([1, 2, 3]);
+            expect(set.size).toBe(smartSet.size);
+            expect(set.has(1)).toBe(smartSet.has(1));
+            expect(set.delete(2)).toBe(smartSet.delete(2));
+            expect(set.add(4)).not.toBe(smartSet.add(4));
+        });
+    });
     describe('size: the number of elements in a set can be obtained with a single getter', () => {
         it('size of empty set', () => {
             const actual = new SmartSet().size;
@@ -376,6 +406,133 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             const expected: SmartSet<number> = new SmartSet([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
             expect(actual.elements).toEqual(expected.elements);
             expect(actual.isEqualTo(expected)).toBeTruthy();
+        });
+    });
+
+    describe('cardinality', () => {
+        it('cardinality of an empty set is 0', () => {
+            const actual = new SmartSet().cardinality;
+            const expected = 0;
+            expect(actual).toEqual(expected);
+        });
+
+        it('cardinality of a non-empty set is the number of elements', () => {
+            const actual = new SmartSet([1, 2, 3]).cardinality;
+            const expected = 3;
+            expect(actual).toEqual(expected);
+        });
+
+        it('cardinality of a set with duplicate elements is the number of unique elements', () => {
+            const actual = new SmartSet([1, 2, 3, 3, 2, 1]).cardinality;
+            const expected = 3;
+            expect(actual).toEqual(expected);
+        });
+
+        it('should obey carniality rules for disjoint sets: |A ∪ B| = |A| + |B|', () => {
+            const setA = new SmartSet([1, 2, 3]);
+            const setB = new SmartSet([4, 5, 6]);
+            const actual = setA.union(setB).cardinality;
+            const expected = setA.cardinality + setB.cardinality;
+            expect(actual).toEqual(expected);
+        });
+
+        it('should obey carniality rules for unions and intersections: |C ∪ D| + |C ∩ D| = |C| + |D|', () => {
+            const setC = new SmartSet([1, 2, 3]);
+            const setD = new SmartSet([4, 5, 6]);
+            const actual = setC.union(setD).cardinality + setC.intersection(setD).cardinality;
+            const expected = setC.cardinality + setD.cardinality;
+            expect(actual).toEqual(expected);
+        });
+    });
+
+    describe('DeMorgan’s Laws', () => {
+        it('A’ ∩ B’ = (A ∪ B)’', () => {
+            const globalSet = new SmartSet([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            const setA = new SmartSet([1, 2, 3]);
+            const setB = new SmartSet([4, 5, 6]);
+            const actual = setA.complement(globalSet).intersection(setB.complement(globalSet));
+            const expected = setA.union(setB).complement(globalSet);
+            expect(actual.elements.sort()).toEqual(expected.elements.sort());
+        });
+
+        it('A’ ∪ B’ = (A ∩ B)’', () => {
+            const globalSet = new SmartSet([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            const setA = new SmartSet([1, 2, 3]);
+            const setB = new SmartSet([4, 5, 6]);
+            const Ac = setA.complement(globalSet);
+            const Bc = setB.complement(globalSet);
+            const AB = setA.intersection(setB);
+            const left = Ac.union(Bc).elements.sort();
+            const right = AB.complement(globalSet).elements.sort();
+            expect(left).toEqual(right);
+        });
+    });
+
+    describe('powerSets & subsetsCount', () => {
+        it('powerSets of an empty set is an empty set', () => {
+            const actual = new SmartSet().powerSet(); // -> should be: { ∅ }
+            expect(actual.cardinality).toEqual(1);
+
+            const elements = actual.elements; // -> [ ∅ ]
+            expect(elements.length).toEqual(1);
+
+            const emptySet = elements[0]; // ->  ∅
+            expect(emptySet).toBeInstanceOf(SmartSet);
+            expect(emptySet.cardinality).toEqual(0);
+        });
+
+        it('powerSets of a non-empty set is the set of all subsets', () => {
+            const actual = new SmartSet([1, 2, 3]).powerSet();
+            const expected: SmartSet<SmartSet<number>> = new SmartSet([
+                new SmartSet([]),
+                new SmartSet([1]),
+                new SmartSet([2]),
+                new SmartSet([3]),
+                new SmartSet([1, 2]),
+                new SmartSet([1, 3]),
+                new SmartSet([2, 3]),
+                new SmartSet([1, 2, 3]),
+            ]);
+            const actualToStr = actual.elements
+                .map((set) => set.elements.sort())
+                .sort()
+                .reduce((acc, curr) => {
+                    acc = acc + '-' + curr.join('');
+                    return acc;
+                }, '');
+            const expectedToStr = expected.elements
+                .map((set) => set.elements.sort())
+                .sort()
+                .reduce((acc, curr) => {
+                    acc = acc + '-' + curr.join('');
+                    return acc;
+                }, '');
+            expect(actualToStr).toBe(expectedToStr);
+        });
+
+        it('subsetsCount of an empty set is 1', () => {
+            const actual = new SmartSet().subsetsCount();
+            const expected = 1;
+            expect(actual).toEqual(expected);
+        });
+
+        it('subsetsCount of a non-empty set is the number of subsets', () => {
+            const actual = new SmartSet([1, 2, 3]).subsetsCount();
+            const expected = 8;
+            expect(actual).toEqual(expected);
+        });
+
+        it('subsetsCount of a set with duplicate elements is the number of unique subsets', () => {
+            const actual = new SmartSet([1, 2, 3, 3, 2, 1]).subsetsCount();
+            const expected = 8;
+            expect(actual).toEqual(expected);
+        });
+
+        it('powerSets count should match the subsetsCount', () => {
+            const set = new SmartSet([0, 1, 2, 3, 4, 5, 6]);
+            const actual = set.powerSet().cardinality;
+            const expected = set.subsetsCount();
+            expect(actual).toEqual(expected);
         });
     });
 });
