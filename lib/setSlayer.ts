@@ -60,6 +60,13 @@ class SmartSet<T> extends Set<T> {
     }
 
     /**
+     * @returns the number of elements in this set (|A| or #A)
+     */
+    get cardinality(): number {
+        return this.size;
+    }
+
+    /**
      * @returns array representation of the set
      */
     toArray(): T[] {

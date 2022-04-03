@@ -24,6 +24,10 @@ declare class SmartSet<T> extends Set<T> {
      */
     get elements(): T[];
     /**
+     * @returns the number of elements in this set (|A| or #A)
+     */
+    get cardinality(): number;
+    /**
      * @returns array representation of the set
      */
     toArray(): T[];
