@@ -45,6 +45,11 @@ declare class SmartSet<T> extends Set<T> {
      */
     contains: (value: T) => boolean;
     /**
+     * alias of `clone`
+     * @returns a copy of the current set
+     */
+    copy: () => SmartSet<T>;
+    /**
      * alias of `delete`
      * - deletes an element from the set
      * @returns true if the element removal is successful
@@ -55,6 +60,10 @@ declare class SmartSet<T> extends Set<T> {
      * @returns all elements in the set except those in the argument set
      */
     subtract: (set: SmartSet<T>) => SmartSet<T>;
+    /**
+     * @returns a random element from the current set
+     */
+    random(): T;
     /**
      * Performs the specified action for each element in the set.
      * @param callbackfn — A function that accepts up to three arguments. forEach calls the callbackfn function one time for each element in the set.

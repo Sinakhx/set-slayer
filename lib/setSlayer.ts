@@ -94,6 +94,12 @@ class SmartSet<T> extends Set<T> {
     contains = this.has;
 
     /**
+     * alias of `clone`
+     * @returns a copy of the current set
+     */
+    copy = this.clone;
+
+    /**
      * alias of `delete`
      * - deletes an element from the set
      * @returns true if the element removal is successful
@@ -105,6 +111,13 @@ class SmartSet<T> extends Set<T> {
      * @returns all elements in the set except those in the argument set
      */
     subtract = this.difference;
+
+    /**
+     * @returns a random element from the current set
+     */
+    random(): T {
+        return this.elements[Math.floor(Math.random() * this.size)];
+    }
 
     /**
      * Performs the specified action for each element in the set.
