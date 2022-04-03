@@ -326,7 +326,7 @@ class SmartSet<T> extends Set<T> {
             }
             return new SmartSet(res);
         };
-        return allSets.reduce((res, set) => symDiff2sets(res, set), this);
+        return allSets.reduce((res, set) => symDiff2sets(res, set), new SmartSet());
     }
 
     /**
