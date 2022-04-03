@@ -304,6 +304,15 @@ class SmartSet<T> extends Set<T> {
     }
 
     /**
+     * The relative complement of A with respect to a set B is the set of elements in B that are not in A
+     * @param set the set to compare with
+     * @returns all elements in the argument set except those in this set
+     */
+    relativeComplement(set: SmartSet<T>): SmartSet<T> {
+        return set.difference(this);
+    }
+
+    /**
      * creates Cartesian Product between two sets (A x B)
      * @param set the second set as the product multiplier
      * @returns a new set which contains pair results from the Cartesian Product of this set with the argument set
