@@ -166,11 +166,11 @@ declare class SmartSet<T> extends Set<T> {
     symmetricDifference(...sets: SmartSet<T>[]): SmartSet<T>;
     /**
      * returns the complement set of this set
-     * @param global set to be considered as the global set
+     * @param globalset set to be considered as the global set
      * - if `autoGlobals` property is set to `true`, the default value is the union of all instantiated sets
      * @returns the complement of the current set based on the given global set
      */
-    complement(global?: SmartSet<T>): SmartSet<T>;
+    complement(globalset?: SmartSet<T>): SmartSet<T>;
     /**
      * The relative complement of A with respect to a set B is the set of elements in B that are not in A
      * @param set the set to compare with
