@@ -535,4 +535,99 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(actual).toEqual(expected);
         });
     });
+
+    describe('relativeComplement relations with symmetricDifference', () => {
+        it('A ∆ B = (A | B) ∪ (B | A)', () => {
+            const A = new SmartSet([1, 2, 3, 4]);
+            const B = new SmartSet([3, 4, 5, 6]);
+            const AdeltaB = A.symmetricDifference(B);
+            const ArelativeToB = A.relativeComplement(B);
+            const BrelativeToA = B.relativeComplement(A);
+            const right = ArelativeToB.union(BrelativeToA);
+            expect(AdeltaB.elements.sort()).toEqual(right.elements.sort());
+        });
+
+        it('A ∆ B = (A ∪ B) | (A ∩ B)', () => {
+            const A = new SmartSet([1, 2, 3, 4]);
+            const B = new SmartSet([3, 4, 5, 6]);
+            const AdeltaB = A.symmetricDifference(B);
+            const AuB = A.union(B);
+            const AnB = A.intersection(B);
+            const right = AuB.relativeComplement(AnB);
+            expect(AdeltaB.elements.sort()).toEqual(right.elements.sort());
+        });
+
+        it('A ∆ B = B ∆ A', () => {
+            const A = new SmartSet([1, 2, 3, 4]);
+            const B = new SmartSet([3, 4, 5, 6]);
+            const AdeltaB = A.symmetricDifference(B);
+            const BdeltaA = B.symmetricDifference(A);
+            expect(AdeltaB.elements.sort()).toEqual(BdeltaA.elements.sort());
+        });
+
+        it('A ∪ B = (A ∆ B) ∆ (A ∩ B)', () => {
+            const A = new SmartSet([1, 2, 3, 4]);
+            const B = new SmartSet([3, 4, 5, 6]);
+            const AuB = A.union(B);
+            const AdeltaB = A.symmetricDifference(B);
+            const AnB = A.intersection(B);
+            const right = AdeltaB.symmetricDifference(AnB);
+            expect(AuB.elements.sort()).toEqual(right.elements.sort());
+        });
+
+        it('(A ∆ B) ∆ C = A ∆ (B ∆ C)', () => {
+            const A = new SmartSet([1, 2, 3, 4]);
+            const B = new SmartSet([3, 4, 5, 6]);
+            const C = new SmartSet([1, 3, 5, 8]);
+            const AdeltaB = A.symmetricDifference(B);
+            const BdeltaC = B.symmetricDifference(C);
+            const left = AdeltaB.symmetricDifference(C);
+            const right = A.symmetricDifference(BdeltaC);
+            expect(left.elements.sort()).toEqual(right.elements.sort());
+        });
+
+        it('(A ∆ B) ∆ (B ∆ C) = A ∆ C', () => {
+            const A = new SmartSet([1, 2, 3, 4]);
+            const B = new SmartSet([3, 4, 5, 6]);
+            const C = new SmartSet([1, 3, 5, 8]);
+            const AdeltaB = A.symmetricDifference(B);
+            const BdeltaC = B.symmetricDifference(C);
+            const left = AdeltaB.symmetricDifference(BdeltaC);
+            const right = A.symmetricDifference(C);
+            expect(left.elements.sort()).toEqual(right.elements.sort());
+        });
+
+        it('A ∩ (B ∆ C) = (A ∩ B) ∆ (A ∩ C)', () => {
+            const A = new SmartSet([1, 2, 3, 4]);
+            const B = new SmartSet([3, 4, 5, 6]);
+            const C = new SmartSet([1, 3, 5, 8]);
+            const AnB = A.intersection(B);
+            const AnC = A.intersection(C);
+            const BdeltaC = B.symmetricDifference(C);
+            const left = A.intersection(BdeltaC);
+            const right = AnB.symmetricDifference(AnC);
+            expect(left.elements.sort()).toEqual(right.elements.sort());
+        });
+
+        it('A ∆ ∅ = A', () => {
+            const A = new SmartSet([1, 2, 3, 4]);
+            const emptySet = new SmartSet();
+            const AdeltaEmptySet = A.symmetricDifference(emptySet);
+            expect(AdeltaEmptySet.elements.sort()).toEqual(A.elements.sort());
+        });
+
+        it('A ∆ A = ∅', () => {
+            const A = new SmartSet([1, 2, 3, 4]);
+            const AdeltaA = A.symmetricDifference(A);
+            expect(AdeltaA.elements.sort()).toEqual([]);
+        });
+
+        it('A ∆ B = ∅  <=> A = B', () => {
+            const A = new SmartSet([1, 2, 3, 4]);
+            const B = new SmartSet([1, 2, 3, 4]);
+            const left = A.symmetricDifference(B).isEmpty();
+            const right = A.isEqualTo(B);
+            expect(left).toBe(right);
+        });
+    });
 });
