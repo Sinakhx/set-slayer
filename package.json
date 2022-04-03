@@ -41,7 +41,8 @@
         "test": "jest",
         "test:c": "jest --coverage",
         "test:w": "jest --watch",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "exp": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm lib/index.ts"
     },
     "devDependencies": {
         "@babel/core": "*",
@@ -65,6 +66,7 @@
         "lint-staged": "^12.3.7",
         "prettier": "^2.6.2",
         "standard-version": "^9.3.2",
+        "ts-node": "^10.7.0",
         "tsup": "*",
         "typescript": "*"
     }
