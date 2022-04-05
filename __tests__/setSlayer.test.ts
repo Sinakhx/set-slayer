@@ -118,6 +118,22 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
         });
     });
 
+    describe('clone (aka copy): returns a copy of the set', () => {
+        it('should return an empty set if the set is empty', () => {
+            const main = new SmartSet();
+            const clone = main.clone();
+            expect(clone).not.toBe(main);
+            expect(clone.size).toBe(0);
+            expect(clone.elements).toEqual([]);
+            main.add(1);
+            main.add(2);
+            clone.add(3);
+            expect(clone.elements).not.toEqual(main.elements);
+            expect(main.elements).toEqual([1, 2]);
+            expect(clone.elements).toEqual([3]);
+        });
+    });
+
     describe('isSubsetOf: a set is a subset if all of its elements are contained in the other set', () => {
         it('empty set is a subset of another empty set', () => {
             const actual = new SmartSet().isSubsetOf(new SmartSet());
