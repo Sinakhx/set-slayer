@@ -442,7 +442,7 @@ class SmartSet<T> extends Set<T> {
     powerSet(): SmartSet<SmartSet<T>> {
         const array = this.elements;
         const result: T[][] = [];
-
+        // https://stackoverflow.com/questions/42773836/how-to-find-all-subsets-of-a-set-in-javascript-powerset-of-array/42774126#42774126
         const fork = (i: number, t: T[]) => {
             if (i === array.length) {
                 result.push(t);
@@ -461,6 +461,7 @@ class SmartSet<T> extends Set<T> {
      */
     subsets() {
         const self = this;
+        // https://stackoverflow.com/questions/42773836/how-to-find-all-subsets-of-a-set-in-javascript-powerset-of-array/42773837#42773837
         return (function* subSets(array, offset): IterableIterator<Array<T>> {
             while (offset < array.length) {
                 const first = array[offset++];
