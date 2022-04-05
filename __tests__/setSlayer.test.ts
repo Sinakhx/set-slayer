@@ -630,4 +630,67 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(left).toBe(right);
         });
     });
+
+    describe('globals', () => {
+        beforeEach(() => {
+            SmartSet.autoGlobals = true;
+        });
+
+        afterEach(() => {
+            SmartSet.autoGlobals = false;
+            SmartSet.clearGlobalSet();
+        });
+
+        it('should return an empty set if no new sets are instantiated', () => {
+            expect(SmartSet.globalSet.isEmpty()).toBe(true);
+        });
+
+        it('should throw for extending globals if "autoGlobals" is inactive', () => {
+            SmartSet.autoGlobals = false;
+            expect(() => {
+                SmartSet.extendGlobalSet([1, 2, 3, 4]);
+            }).toThrow();
+        });
+
+        it('should clearGlobalSet', () => {
+            const A = new SmartSet([3, 4, 5, 6]);
+            expect(SmartSet.globalSet.has(5)).toBe(true);
+            expect(SmartSet.globalSet.elements.sort()).toEqual(A.elements.sort());
+            SmartSet.clearGlobalSet();
+            expect(SmartSet.globalSet.isEmpty()).toBe(true);
+        });
+
+        it('should automatically add new set members to the global set', () => {
+            const A = new SmartSet([3, 4, 5, 6]);
+            expect(SmartSet.globalSet.has(5)).toBe(true);
+            expect(SmartSet.globalSet.elements.sort()).toEqual(A.elements.sort());
+            const B = new SmartSet([1, 2, 3, 4]);
+            expect(SmartSet.globalSet.has(1)).toBe(true);
+            expect(SmartSet.globalSet.elements.sort()).toEqual(A.union(B).elements.sort());
+        });
+
+        it('should stop adding set members to the global set when "autoGlobals" is explicitly set to false', () => {
+            new SmartSet([1, 2, 3, 4]);
+            new SmartSet([3, 4, 5, 6]);
+            expect(SmartSet.globalSet.elements.sort()).toEqual([1, 2, 3, 4, 5, 6]);
+            SmartSet.autoGlobals = false;
+            new SmartSet([7, 8, 9, 10]);
+            new SmartSet([11, 12, 13, 14]);
+            expect(SmartSet.globalSet.has(8)).toBe(false);
+            expect(SmartSet.globalSet.elements.sort()).toEqual([1, 2, 3, 4, 5, 6]);
+        });
+
+        describe('should obey complement laws', () => {
+            it('A ∪ A’ = U', () => {
+                const A = new SmartSet([1, 2, 3, 4]);
+                const U = SmartSet.globalSet;
+                expect(A.union(A.complement()).isEqualTo(U)).toBe(true);
+            });
+
+            it('U’ = ∅', () => {
+                const U = SmartSet.globalSet;
+                expect(U.complement().isEmpty()).toBe(true);
+            });
+        });
+    });
 });
