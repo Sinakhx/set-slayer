@@ -4,20 +4,43 @@ class SmartSet<T> extends Set<T> {
      */
     static autoGlobals: boolean = false;
 
-    private static _globalSet: SmartSet<any> | Set<any> | undefined;
+    /**
+     * DO NOT TOUCH THIS PROPERTY
+     */
+    private static _globalSet: Set<any> | undefined;
 
     /**
      * @returns global set as the reference set
      */
-    get globalSet(): SmartSet<T> {
-        return new SmartSet(SmartSet._globalSet ? Array.from(SmartSet._globalSet) : []);
+    static get globalSet(): SmartSet<unknown> {
+        const prevState = SmartSet.autoGlobals;
+        const setAutoGlobals = (v: boolean) => {
+            SmartSet.autoGlobals = v;
+        };
+        setAutoGlobals(false); // to prevent infinite recursion on new SmartSet instantiations
+        const s = new SmartSet(SmartSet._globalSet ? Array.from(SmartSet._globalSet.keys()) : []);
+        setAutoGlobals(prevState);
+        return s;
     }
 
     /**
      * @returns global set as the reference set
      */
-    set globalSet(set: SmartSet<T>) {
+    static set globalSet(set: SmartSet<unknown>) {
         SmartSet._globalSet = new Set(set.elements);
+    }
+
+    static extendGlobalSet(elements: any[]) {
+        if (!SmartSet.autoGlobals) {
+            throw new Error('SmartSet.autoGlobals is set to false, cannot add to globalSet');
+        }
+        for (const element of elements) {
+            SmartSet._globalSet!.add(element);
+        }
+    }
+
+    static clearGlobalSet() {
+        SmartSet._globalSet = undefined;
     }
 
     constructor(...elements: any[]) {
@@ -26,13 +49,9 @@ class SmartSet<T> extends Set<T> {
             return;
         }
         if (!SmartSet._globalSet) {
-            // using native Set api to avoid infinite callbacks on constructor
-            SmartSet._globalSet = new Set(this.elements);
-        } else {
-            for (const element of elements) {
-                SmartSet._globalSet.add(element);
-            }
+            SmartSet._globalSet = new Set(Array.from(super.values()));
         }
+        SmartSet.extendGlobalSet(elements[0]);
     }
 
     /**
@@ -85,6 +104,8 @@ class SmartSet<T> extends Set<T> {
         super.add(value);
         return this;
     }
+
+    // TODO: extends
 
     /**
      * @returns array representation of the set
@@ -358,10 +379,10 @@ class SmartSet<T> extends Set<T> {
         if (globalset) {
             return globalset.difference(this);
         }
-        if (SmartSet.autoGlobals && SmartSet._globalSet) {
-            set = this.globalSet;
+        if (SmartSet.autoGlobals) {
+            set = SmartSet.globalSet as SmartSet<T>;
         } else {
-            throw new Error(`Global set is not defined: ${globalset}`);
+            throw new Error("autoGlobals is set to false. 'globalset' argument is required.");
         }
         return set.difference(this);
     }

@@ -3,15 +3,20 @@ declare class SmartSet<T> extends Set<T> {
      * if set to true, automatically adds new elements to the globalSet on every set creation
      */
     static autoGlobals: boolean;
+    /**
+     * DO NOT TOUCH THIS PROPERTY
+     */
     private static _globalSet;
     /**
      * @returns global set as the reference set
      */
-    get globalSet(): SmartSet<T>;
+    static get globalSet(): SmartSet<unknown>;
     /**
      * @returns global set as the reference set
      */
-    set globalSet(set: SmartSet<T>);
+    static set globalSet(set: SmartSet<unknown>);
+    static extendGlobalSet(elements: any[]): void;
+    static clearGlobalSet(): void;
     constructor(...elements: any[]);
     /**
      * creates a new set from the given arguments (flattens Sets & Arrays one level deep)
