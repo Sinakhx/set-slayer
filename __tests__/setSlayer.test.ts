@@ -708,4 +708,16 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             });
         });
     });
+
+    describe('extends', () => {
+        it('should extend a set', () => {
+            const A: SmartSet<number> = new SmartSet([1, 2, 3, 4]);
+            A.extends([5, 6, 7, 8]);
+            expect(A.elements.sort()).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+            const B: SmartSet<number> = new SmartSet([9, 10, 11, 12]);
+            const C = new Set([13, 14, 15]);
+            A.extends(B, C);
+            expect(A.elements.sort((a, b) => a - b)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+        });
+    });
 });
