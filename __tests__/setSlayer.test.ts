@@ -238,6 +238,16 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             const expected = new SmartSet([1, 2, 3]);
             expect(actual.isEqualTo(expected)).toBeTruthy();
         });
+
+        it('adding a new element when "autoGlobals" is set to true, adds it to the globalSet as well', () => {
+            SmartSet.autoGlobals = true;
+            const actual = new SmartSet([1, 2, 3]).add(4);
+            const expected = new SmartSet([1, 2, 3, 4]);
+            expect(actual.isEqualTo(expected)).toBeTruthy();
+            expect(SmartSet.globalSet.isEqualTo(expected)).toBeTruthy();
+            SmartSet.autoGlobals = false;
+            SmartSet.clearGlobalSet();
+        });
     });
 
     describe('delete (aka remove): elements can be removed from a set', () => {
@@ -317,6 +327,21 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
 
             const subtracted = new SmartSet([3, 2, 1]).subtract(new SmartSet([2, 4]));
             expect(subtracted.isEqualTo(expected)).toBeTruthy();
+        });
+    });
+
+    describe('random: returns a random element from the set', () => {
+        it('random element from empty set', () => {
+            const actual = new SmartSet().random();
+            expect(actual).toBeUndefined();
+        });
+
+        it('random element from non-empty set', () => {
+            const set = new SmartSet([1, 2, 3]);
+            for (let i = 0; i < 20; i++) {
+                const rand = set.random();
+                expect(set.contains(rand)).toBe(true);
+            }
         });
     });
 
