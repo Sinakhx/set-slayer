@@ -15,7 +15,15 @@ declare class SmartSet<T> extends Set<T> {
      * @returns global set as the reference set
      */
     static set globalSet(set: SmartSet<unknown>);
+    /**
+     * adds new elements to the global set
+     * @param elements elements to be added to the global set
+     * @returns global set as the reference set
+     */
     static extendGlobalSet(elements: any[]): void;
+    /**
+     * removes all elements from the global set
+     */
     static clearGlobalSet(): void;
     constructor(...elements: any[]);
     /**

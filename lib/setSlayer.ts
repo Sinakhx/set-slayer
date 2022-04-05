@@ -30,6 +30,11 @@ class SmartSet<T> extends Set<T> {
         SmartSet._globalSet = new Set(set.elements);
     }
 
+    /**
+     * adds new elements to the global set
+     * @param elements elements to be added to the global set
+     * @returns global set as the reference set
+     */
     static extendGlobalSet(elements: any[]) {
         if (!SmartSet.autoGlobals) {
             throw new Error('SmartSet.autoGlobals is set to false, cannot add to globalSet');
@@ -39,6 +44,9 @@ class SmartSet<T> extends Set<T> {
         }
     }
 
+    /**
+     * removes all elements from the global set
+     */
     static clearGlobalSet() {
         SmartSet._globalSet = undefined;
     }

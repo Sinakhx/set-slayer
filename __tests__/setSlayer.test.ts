@@ -31,6 +31,7 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(set.add(4)).not.toBe(smartSet.add(4));
         });
     });
+
     describe('size: the number of elements in a set can be obtained with a single getter', () => {
         it('size of empty set', () => {
             const actual = new SmartSet().size;
@@ -44,6 +45,7 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(actual).toBe(expected);
         });
     });
+
     describe('elements & toArray: the set elements can be returned as an array', () => {
         it('elements of empty set', () => {
             const set = new SmartSet();
@@ -66,6 +68,7 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(set.toArray()).toEqual(expected);
         });
     });
+
     describe('isEmpty: returns true if the set contains no elements', () => {
         it('should be empty if there are no elements', () => {
             const actual = new SmartSet().isEmpty();
@@ -77,6 +80,7 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(actual).toBeFalsy();
         });
     });
+
     describe('isSingleton: returns true if the set contains only one element', () => {
         it('should return false if there are no elements', () => {
             const actual = new SmartSet().isSingleton();
@@ -93,6 +97,7 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(actual).toBe(false);
         });
     });
+
     describe('contains (aka has): sets can report if they contain an element', () => {
         it('should contain nothing if set is empty', () => {
             const set = new SmartSet();
@@ -112,6 +117,7 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(set.contains(4)).toBeFalsy();
         });
     });
+
     describe('isSubsetOf: a set is a subset if all of its elements are contained in the other set', () => {
         it('empty set is a subset of another empty set', () => {
             const actual = new SmartSet().isSubsetOf(new SmartSet());
@@ -143,6 +149,7 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(actual).toBeFalsy();
         });
     });
+
     describe('isDisjointOf: sets are disjoint if they share no elements', () => {
         it('the empty set is disjoint with itself', () => {
             const actual = new SmartSet().isDisjointOf(new SmartSet([]));
@@ -169,6 +176,7 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(actual).toBeTruthy();
         });
     });
+
     describe('isEqualTo: sets with the same elements are equal', () => {
         it('empty sets are equal', () => {
             const actual = new SmartSet().isEqualTo(new SmartSet());
@@ -195,6 +203,7 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(actual).toBeFalsy();
         });
     });
+
     describe('add: unique elements can be added to a set', () => {
         it('add to empty set', () => {
             const actual = new SmartSet().add(3);
@@ -214,6 +223,7 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(actual.isEqualTo(expected)).toBeTruthy();
         });
     });
+
     describe('delete (aka remove): elements can be removed from a set', () => {
         it('remove from empty set', () => {
             const actual = new SmartSet();
@@ -239,6 +249,7 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(actual.isEqualTo(expected)).toBeTruthy();
         });
     });
+
     describe('clear: all elements can be removed from a set with a single method', () => {
         it('clear an empty set', () => {
             const actual = new SmartSet();
@@ -254,6 +265,7 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(actual.isEqualTo(expected)).toBeTruthy();
         });
     });
+
     describe('difference (aka subtract) of a set is a set of all elements that are only in the first set', () => {
         it('difference of two empty sets is an empty set', () => {
             const actual = new SmartSet().difference(new SmartSet());
@@ -291,6 +303,7 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(subtracted.isEqualTo(expected)).toBeTruthy();
         });
     });
+
     describe('intersection: returns a set of all shared elements', () => {
         it('intersection of two empty sets is an empty set', () => {
             const actual = new SmartSet().intersection(new SmartSet());
@@ -336,6 +349,7 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(actual2.isEqualTo(expected2)).toBeTruthy();
         });
     });
+
     describe('union: returns a set of all elements in either set', () => {
         it('union of empty sets is an empty set', () => {
             const actual = new SmartSet().union(new SmartSet());
@@ -376,6 +390,7 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(actual.isEqualTo(expected)).toBeTruthy();
         });
     });
+
     describe('from: creates a SmartSet based on given arguments', () => {
         it('from an empty array returns an empty set', () => {
             const actual = SmartSet.from();
