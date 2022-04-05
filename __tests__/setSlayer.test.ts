@@ -730,13 +730,6 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(SmartSet.globalSet.isEmpty()).toBe(true);
         });
 
-        it('should throw for extending globals if "autoGlobals" is inactive', () => {
-            SmartSet.autoGlobals = false;
-            expect(() => {
-                SmartSet.extendGlobalSet([1, 2, 3, 4]);
-            }).toThrow();
-        });
-
         it('should clearGlobalSet', () => {
             const A = new SmartSet([3, 4, 5, 6]);
             expect(SmartSet.globalSet.has(5)).toBe(true);
@@ -787,6 +780,12 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
     });
 
     describe('extends', () => {
+        it('extending the globals without any set instantiation should be possible', () => {
+            SmartSet.autoGlobals = true;
+            SmartSet.extendGlobalSet([1, 2, 3, 4]);
+            expect(SmartSet.globalSet.elements.sort()).toEqual([1, 2, 3, 4]);
+        });
+
         it('should extend a set', () => {
             const A: SmartSet<number> = new SmartSet([1, 2, 3, 4]);
             A.extends([5, 6, 7, 8]);

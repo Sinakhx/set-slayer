@@ -36,11 +36,11 @@ class SmartSet<T> extends Set<T> {
      * @returns global set as the reference set
      */
     static extendGlobalSet(elements: any[]) {
-        if (!SmartSet.autoGlobals) {
-            throw new Error('SmartSet.autoGlobals is set to false, cannot add to globalSet');
+        if (!SmartSet._globalSet) {
+            SmartSet._globalSet = new Set();
         }
         for (const element of elements) {
-            SmartSet._globalSet!.add(element);
+            SmartSet._globalSet.add(element);
         }
     }
 
