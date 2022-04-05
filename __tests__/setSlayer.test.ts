@@ -345,6 +345,35 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
         });
     });
 
+    describe('stringify: returns a string representation of the set', () => {
+        it('stringify of empty set', () => {
+            const actual = new SmartSet().stringify();
+            const expected = '{}';
+            expect(actual).toBe(expected);
+        });
+
+        it('stringify of a set of numbers only', () => {
+            const actual = new SmartSet([1, 2, 3]).stringify();
+            const expected = '{ 1, 2, 3 }';
+            expect(actual).toBe(expected);
+        });
+
+        it('stringify of a set of arrays and objects', () => {
+            const actual = new SmartSet([[1, 2, 3], [4, 5], [6], { a: 2 }]).stringify();
+            const expected = '{ [1,2,3], [4,5], [6], {"a":2} }';
+            expect(actual).toBe(expected);
+        });
+
+        it('stringify of a set of SmartSets', () => {
+            const A = new SmartSet([1, 2, 3]);
+            const B = new SmartSet([4, 5, 6]);
+            const C = new SmartSet([7, B]);
+            const actual = new SmartSet([A, C]).stringify();
+            const expected = '{ { 1, 2, 3 }, { 7, { 4, 5, 6 } } }';
+            expect(actual).toBe(expected);
+        });
+    });
+
     describe('intersection: returns a set of all shared elements', () => {
         it('intersection of two empty sets is an empty set', () => {
             const actual = new SmartSet().intersection(new SmartSet());
