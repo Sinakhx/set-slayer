@@ -695,6 +695,13 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(SmartSet.globalSet.elements.sort()).toEqual([1, 2, 3, 4, 5, 6]);
         });
 
+        it('should add to the global set when extending it', () => {
+            const A = new SmartSet([3, 4, 5, 6]);
+            A.extends([7, 8, 9]);
+            expect(SmartSet.globalSet.has(8)).toBe(true);
+            expect(SmartSet.globalSet.elements.sort()).toEqual([3, 4, 5, 6, 7, 8, 9]);
+        });
+
         describe('should obey complement laws', () => {
             it('A ∪ A’ = U', () => {
                 const A = new SmartSet([1, 2, 3, 4]);
