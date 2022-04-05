@@ -48,6 +48,12 @@ declare class SmartSet<T> extends Set<T> {
      */
     add(value: T): this;
     /**
+     * extends the set with the elements from the argument sets/arrays
+     * @param from source set or array
+     * @returns this set
+     */
+    extends(...from: Array<SmartSet<T> | Set<T> | T[]>): this;
+    /**
      * @returns array representation of the set
      */
     toArray(): T[];

@@ -113,7 +113,20 @@ class SmartSet<T> extends Set<T> {
         return this;
     }
 
-    // TODO: extends
+    /**
+     * extends the set with the elements from the argument sets/arrays
+     * @param from source set or array
+     * @returns this set
+     */
+    extends(...from: Array<SmartSet<T> | Set<T> | T[]>): this {
+        for (const arg of from) {
+            const arr = Array.isArray(arg) ? arg : Array.from(arg.keys());
+            for (const element of arr) {
+                this.add(element);
+            }
+        }
+        return this;
+    }
 
     /**
      * @returns array representation of the set
