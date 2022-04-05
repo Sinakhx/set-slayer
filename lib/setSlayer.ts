@@ -187,16 +187,22 @@ class SmartSet<T> extends Set<T> {
      * @returns string representation of the set
      */
     stringify(delimiter: string = ', '): string {
-        const res = this.elements
-            .map((el) => {
-                if (el instanceof SmartSet) {
-                    return `{ ${el.stringify(delimiter)} }`;
-                }
-                return JSON.stringify(el);
-            })
-            .sort()
-            .join(delimiter);
-        return `{ ${res} }`;
+        const fn = (elem: any, del = delimiter, rawResult: number = 0) => {
+            const res = elem.elements
+                .map((el: any) => {
+                    if (el instanceof SmartSet) {
+                        return `{ ${fn(el, del, 1)} }`;
+                    }
+                    return JSON.stringify(el);
+                })
+                .sort()
+                .join(delimiter);
+            if (rawResult) {
+                return res;
+            }
+            return res ? `{ ${res} }` : '{}';
+        };
+        return fn(this);
     }
 
     /**
