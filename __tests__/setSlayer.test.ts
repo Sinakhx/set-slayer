@@ -796,4 +796,48 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(A.elements.sort((a, b) => a - b)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
         });
     });
+
+    describe('forEach', () => {
+        it('should call the callbackfn function one time for each element in the set', () => {
+            const set = new SmartSet<number>([1, 2, 3, 4]);
+            let count = 0;
+            let sum = 0;
+            set.forEach((value) => {
+                count++;
+                sum += value;
+            });
+            expect(count).toBe(4);
+            expect(sum).toBe(10);
+        });
+    });
+
+    describe('map', () => {
+        it('should call the callbackfn function one time for each element in the set and return a new set', () => {
+            const set = new SmartSet<number>([1, 2, 3, 4]);
+            const mapped = set.map((value) => value * 2);
+            expect(mapped.elements.sort()).toEqual([2, 4, 6, 8]);
+        });
+    });
+
+    describe('filter', () => {
+        it('should call the callbackfn function one time for each element in the set and return a new set', () => {
+            const set = new SmartSet<number>([1, 2, 3, 4]);
+            const filtered = set.filter((value) => value % 2 === 0);
+            expect(filtered.elements.sort()).toEqual([2, 4]);
+        });
+    });
+
+    describe('reduce', () => {
+        it('should call the callbackfn function one time for each element in the set and return a new set', () => {
+            const set = new SmartSet<number>([1, 2, 3, 4]);
+            const reduced = set.reduce((acc, value) => acc + value, 0);
+            expect(reduced).toBe(10);
+        });
+
+        it('should provide the key as the third arge & the set itself as the fourth arg', () => {
+            const set = new SmartSet<number>([1, 2, 3, 4]);
+            const reduced = set.reduce((acc, value, key, s) => acc + value + key + s.elements.sort()[0], 0);
+            expect(reduced).toBe(24);
+        });
+    });
 });
