@@ -124,7 +124,7 @@ declare class SmartSet<T> extends Set<T> {
      * checks if the given argument is a set
      * @param set value to be checked
      */
-    isSet(set: unknown): boolean;
+    static isSet(set: unknown): boolean;
     /**
      * @returns a copy of the current set
      */
