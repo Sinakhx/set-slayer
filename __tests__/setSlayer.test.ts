@@ -958,4 +958,30 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(SmartSet.isSet(new RegExp('.'))).toBe(false);
         });
     });
+
+    describe('cartesianProduct', () => {
+        it('should create Cartesian Product between two sets (A x B)', () => {
+            const sortFn = (a: number[], b: number[]) => {
+                if (a[0] === b[0]) {
+                    return a[1] - b[1];
+                }
+                return a[0] - b[0];
+            };
+            const A = new SmartSet<number>([1, 2, 3]);
+            const B = new SmartSet<number>([4, 5, 6]);
+            const product = new SmartSet<[number, number]>([
+                [1, 4],
+                [1, 5],
+                [1, 6],
+                [2, 4],
+                [2, 5],
+                [2, 6],
+                [3, 4],
+                [3, 5],
+                [3, 6],
+            ]).elements.sort(sortFn);
+            const pairs = A.cartesianProduct(B).elements.sort(sortFn);
+            expect(pairs).toEqual(product);
+        });
+    });
 });
