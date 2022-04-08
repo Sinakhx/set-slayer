@@ -166,6 +166,102 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
         });
     });
 
+    describe('isProperSubsetOf: a set is a proper subset of if all of its elements are contained in the other set but the sets should not be equal', () => {
+        it('empty set is Not a proper subset of another empty set', () => {
+            const actual = new SmartSet().isProperSubsetOf(new SmartSet());
+            expect(actual).toBeFalsy();
+        });
+
+        it('empty set is a proper subset of non-empty set', () => {
+            const actual = new SmartSet().isProperSubsetOf(new SmartSet([1]));
+            expect(actual).toBeTruthy();
+        });
+
+        it('non-empty set is not a proper subset of empty set', () => {
+            const actual = new SmartSet([1]).isProperSubsetOf(new SmartSet());
+            expect(actual).toBeFalsy();
+        });
+
+        it('set is Not a proper subset of set with exact same elements', () => {
+            const actual = new SmartSet([1, 2, 3]).isProperSubsetOf(new SmartSet([1, 2, 3]));
+            expect(actual).toBeFalsy();
+        });
+
+        it('set is a proper subset of larger set with same elements', () => {
+            const actual = new SmartSet([1, 2, 3]).isProperSubsetOf(new SmartSet([4, 1, 2, 3]));
+            expect(actual).toBeTruthy();
+        });
+
+        it('set is not a proper subset of set that does not contain its elements', () => {
+            const actual = new SmartSet([1, 2, 3]).isProperSubsetOf(new SmartSet([4, 1, 3]));
+            expect(actual).toBeFalsy();
+        });
+    });
+
+    describe('isSupersetOf: a set is a superset if some of its elements are contained in the other set', () => {
+        it('empty set is a superset of another empty set', () => {
+            const actual = new SmartSet().isSupersetOf(new SmartSet());
+            expect(actual).toBeTruthy();
+        });
+
+        it('non-empty set is a superset of empty set', () => {
+            const actual = new SmartSet([1]).isSupersetOf(new SmartSet());
+            expect(actual).toBeTruthy();
+        });
+
+        it('empty set is not a superset of non-empty set', () => {
+            const actual = new SmartSet([]).isSupersetOf(new SmartSet([1]));
+            expect(actual).toBeFalsy();
+        });
+
+        it('set is a superset of set with exact same elements', () => {
+            const actual = new SmartSet([1, 2, 3]).isSupersetOf(new SmartSet([1, 2, 3]));
+            expect(actual).toBeTruthy();
+        });
+
+        it('set is a superset of smaller set with same elements', () => {
+            const actual = new SmartSet([4, 1, 2, 3]).isSupersetOf(new SmartSet([1, 2, 3]));
+            expect(actual).toBeTruthy();
+        });
+
+        it('set is not a superset of set that does not contain its elements', () => {
+            const actual = new SmartSet([1, 2, 3]).isSupersetOf(new SmartSet([4, 1, 3]));
+            expect(actual).toBeFalsy();
+        });
+    });
+
+    describe('isProperSupersetOf: a set is a superset if some of its elements are contained in the other set but the sets should not be equal', () => {
+        it('empty set is Not a superset of another empty set', () => {
+            const actual = new SmartSet().isProperSupersetOf(new SmartSet());
+            expect(actual).toBeFalsy();
+        });
+
+        it('non-empty set is a superset of empty set', () => {
+            const actual = new SmartSet([1]).isProperSupersetOf(new SmartSet());
+            expect(actual).toBeTruthy();
+        });
+
+        it('empty set is not a superset of non-empty set', () => {
+            const actual = new SmartSet([]).isProperSupersetOf(new SmartSet([1]));
+            expect(actual).toBeFalsy();
+        });
+
+        it('set is Not a superset of set with exact same elements', () => {
+            const actual = new SmartSet([1, 2, 3]).isProperSupersetOf(new SmartSet([1, 2, 3]));
+            expect(actual).toBeFalsy();
+        });
+
+        it('set is a superset of smaller set with same elements', () => {
+            const actual = new SmartSet([4, 1, 2, 3]).isProperSupersetOf(new SmartSet([1, 2, 3]));
+            expect(actual).toBeTruthy();
+        });
+
+        it('set is not a superset of set that does not contain its elements', () => {
+            const actual = new SmartSet([1, 2, 3]).isProperSupersetOf(new SmartSet([4, 1, 3]));
+            expect(actual).toBeFalsy();
+        });
+    });
+
     describe('isDisjointOf: sets are disjoint if they share no elements', () => {
         it('the empty set is disjoint with itself', () => {
             const actual = new SmartSet().isDisjointOf(new SmartSet([]));
