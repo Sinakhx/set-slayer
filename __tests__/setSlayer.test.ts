@@ -840,4 +840,26 @@ describe("A suite for the Set-Slayer's SmartSet API", () => {
             expect(reduced).toBe(24);
         });
     });
+
+    describe('isSet', () => {
+        it('should return true if the object is a set', () => {
+            const smart = new SmartSet<number>([1, 2, 3, 4]);
+            expect(SmartSet.isSet(smart)).toBe(true);
+
+            const simple = new Set<number>([1, 2, 3, 4]);
+            expect(SmartSet.isSet(simple)).toBe(true);
+        });
+
+        it('should return false if the argument is not a set', () => {
+            expect(SmartSet.isSet(1)).toBe(false);
+            expect(SmartSet.isSet(true)).toBe(false);
+            expect(SmartSet.isSet(null)).toBe(false);
+            expect(SmartSet.isSet(NaN)).toBe(false);
+            expect(SmartSet.isSet({})).toBe(false);
+            expect(SmartSet.isSet([])).toBe(false);
+            expect(SmartSet.isSet(new Map())).toBe(false);
+            expect(SmartSet.isSet(new Date())).toBe(false);
+            expect(SmartSet.isSet(new RegExp('.'))).toBe(false);
+        });
+    });
 });
